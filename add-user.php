@@ -10,15 +10,34 @@ $pwdrepeat = $_POST["pwdrepeat"];
 
 // }
 
-var_dump($email, $pwd, $pwdrepeat);
-$hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
+// mettre en places ces conditions pour l’insertion des membres :
 
-$sql = "INSERT INTO users (Email, Password) VALUES (:email, :pwd)";
+// 	/ - email au bon format
+// 	/ - mot de passe correspondant à certaines contraintes
+// 	/ - deuxième mot de passe similaire au premier
+// 	/ - mot de passe haché
 
-     $statement = $pdo->prepare($sql);
-     $statement->bindParam("email", $email);
-     $statement->bindParam("pwd", $hashedPwd);
-     $statement->execute();
+if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+     if ($pwdrepeat === $pwd){
+          addUser($email, $pwd, $pwdrepeat, $pdo);
+     }
+}
 
-     header("location:login.php ");
+
+
+function addUser($email, $pwd, $pwdrepeat, $pdo){
+     var_dump($email, $pwd, $pwdrepeat);
+     $pwd = trim(htmlentities($pwd));
+     $hashedPwd = password_hash($pwd, PASSWORD_DEFAULT);
+     
+     $sql = "INSERT INTO users (Email, Password) VALUES (:email, :pwd)";
+     
+          $statement = $pdo->prepare($sql);
+          $statement->bindParam("email", $email);
+          $statement->bindParam("pwd", $hashedPwd);
+          $statement->execute();
+     
+          header("location:login.php ");
+     
+}
 
