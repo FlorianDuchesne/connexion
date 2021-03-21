@@ -49,6 +49,17 @@ session_start();
     </div>
   </section>
 
+  <?php
+  if (isset($_GET["error"])) {
+    if ($_GET["error"] == "userexists") {
+      echo "<p>cet identifiant est déjà inscrit !</p>";
+    } else if ($_GET["error"] == "wrongpasswords") {
+      echo "<p>le deuxième mot de passe n'est pas similaire au premier !</p>";
+    }
+  }
+  ?>
+
+
 </body>
 <script src="script.js"></script>
 

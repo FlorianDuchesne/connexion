@@ -18,9 +18,13 @@ if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
           if (!$user) {
                $controler->addUser($email, $pwd, $pwdrepeat, $pdo);
           } else {
-               echo "cet identifiant est déjà inscrit !";
+               header("location: ./signup.php?error=userexists");
+               exit();
+               // echo "cet identifiant est déjà inscrit !";
           }
      } else {
-          echo "le deuxième mot de passe n'est pas similaire au premier !";
+          header("location: ./signup.php?error=wrongpasswords");
+          exit();
+          // echo "le deuxième mot de passe n'est pas similaire au premier !";
      }
 }

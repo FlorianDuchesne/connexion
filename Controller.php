@@ -53,8 +53,13 @@ class Controller
     password_verify($pwd, $upwd);
     var_dump(password_verify($pwd, $upwd));
     if (!password_verify($pwd, $upwd)) {
-      echo "mot de passe incorrect, merci de réessayer";
-    } else {
+      header("location: ./login.php?error=wrongpassword");
+      exit();
+    }
+
+    //   echo "mot de passe incorrect, merci de réessayer";
+    // }
+    else {
       echo "mot de passe correct";
     }
   }
