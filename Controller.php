@@ -61,6 +61,7 @@ class Controller
     // }
     else {
       echo "mot de passe correct";
+      return password_verify($pwd, $upwd);
     }
   }
 }

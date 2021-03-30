@@ -2,6 +2,7 @@
 
 require_once('connect.php');
 require_once('Controller.php');
+session_start();
 
 
 $controler = new Controller($pdo);

@@ -1,5 +1,32 @@
 <?php
 require_once('connect.php');
+require_once('Controller.php');
+session_start();
+
+if (isset($_POST["email"])) {
+  $email = $_POST["email"];
+  $pwd = $_POST["pwd"];
+
+
+  $controler = new Controller($pdo);
+
+  $token = filter_input(INPUT_POST, 'token', FILTER_SANITIZE_STRING);
+
+  $user = $controler->getUser($email);
+  if ($user) {
+    if ($controler->verifMotdepasse($pwd)) {
+      if (hash_equals($_SESSION['token'], $token)) {
+        $_SESSION['user'] = $user['Email'];
+        header("location:index.php");
+      } else {
+        echo "il y a un souci avec le token";
+      };
+    }
+  } else {
+    header("location: ./login.php?error=wrongemail");
+  }
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -19,7 +46,7 @@ require_once('connect.php');
   <section class="connexion">
     <div class="form-wrapper">
       <h1>Connexion</h1>
-      <form action="index.php" method="post">
+      <form action="login.php" method="post">
         <div class="form-item">
           <label for="email"></label>
           <input type="email" name="email" required="required" placeholder="Addresse email"></input>
@@ -31,6 +58,7 @@ require_once('connect.php');
             <i onclick="myFunction()" class="togglePwd fas fa-eye"></i>
           </div>
         </div>
+        <p><input type="hidden" value="<?= $_SESSION["token"] ?>" name="token"></p>
         <div class="button-panel">
           <input type="submit" class="button" title="Valider" value="Valider"></input>
         </div>
@@ -46,6 +74,8 @@ require_once('connect.php');
   if (isset($_GET["error"])) {
     if ($_GET["error"] == "wrongpassword") {
       echo "<p>mot de passe incorrect, merci de réessayer</p>";
+    } else if ($_GET["error"] == "wrongemail") {
+      echo "<p>email incorrect, merci de réessayer</p>";
     }
   }
   ?>
